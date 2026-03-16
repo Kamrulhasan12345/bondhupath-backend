@@ -5,14 +5,14 @@ import config from "../config/config";
 export const accessJwt = new Elysia({ name: "accessJwt.middleware" })
   .use(jwt({
     name: "accessJwt",
-    secret: config.auth.jwt.access_secret,
+    secret: config.auth.jwt.accessSecret,
     exp: config.auth.jwt.accessTokenExp,
   }));
 
 export const refreshJwt = new Elysia({ name: "refreshJwt.middleware" })
   .use(jwt({
     name: "refreshJwt",
-    secret: config.auth.jwt.refresh_secret,
+    secret: config.auth.jwt.refreshSecret,
     exp: config.auth.jwt.refreshTokenExp,
   }))
 

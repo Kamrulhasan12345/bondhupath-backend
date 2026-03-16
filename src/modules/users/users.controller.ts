@@ -1,13 +1,12 @@
 import Elysia from "elysia";
-import { authn } from "../../middlewares/authn.middleware";
+import { authz } from "../../middlewares/authz.middleware";
 
 export const usersController = new Elysia({ prefix: "/users" })
-  .use(authn)
-  .get("/", async ({ user }) => {
+  .use(authz)
+  .get("/me", async ({ userObj }) => {
     return {
-      message: "Get all users endpoint - implement your logic here",
-      user: user
+      user: userObj
     }
   }, {
-    authn: true
+    authz: true
   });

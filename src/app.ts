@@ -28,6 +28,9 @@ app
     references: fromTypes()
   }))
   .use(chatWs)
+  .group("/api", app =>
+    app.group("/v1", v1 => v1.use(authController).use(usersController))
+  )
   .use(authController)
   .use(usersController)
 

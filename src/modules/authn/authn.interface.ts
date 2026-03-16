@@ -1,29 +1,16 @@
-export interface User {
-  id: string;
+import z from "zod";
 
-  full_name: string;
-  email: string;
-
-  passwordHash: string;
-
-  gender: 'male' | 'female';
-  role: 'student' | 'teacher' | 'staff';
-
-  buet_id: string;
-  department?: string;
-
-  account_status: 'pending_verification' | 'verified' | 'suspended';
-
-  id_card_url?: string;
-  consent_log?: Record<string, string>;
-
-  push_token?: string;
-
-  created_at: Date
-  updated_at: Date
-
+export const registerRequestBodySchema = {
+  email: z.email(),
+  password: z.string().min(6),
+  full_name: z.string().min(1),
+  gender: z.enum(['male', 'female']),
+  role: z.enum(['student', 'teacher', 'staff']),
+  buet_id: z.string().min(1),
+  department: z.enum(["CSE", "EEE", "BME", "ME", "MME", "IPE", "WRE", "NAME", "CE", "URP", "CHE", "NCE", "PMRE", "CHEM", "MATH", "PHYS", "HUM", "ARCH"]),
 }
 
-export interface AuthContext {
-  user: Omit<User, 'passwordHash' | 'refreshTokenHash'>
+export const loginRequestBodySchema = {
+  buet_id: z.string().min(1),
+  password: z.string().min(6),
 }

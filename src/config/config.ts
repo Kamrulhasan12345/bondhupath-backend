@@ -1,4 +1,5 @@
 import { z } from "zod";
+import ms from "ms";
 import logger from "../utils/logger";
 import { ACCESS_TOKEN_EXP, REFRESH_TOKEN_EXP } from "./constant";
 
@@ -31,10 +32,12 @@ export const config = {
   },
   auth: {
     jwt: {
-      access_secret: env.JWT_ACCESS_SECRET,
-      refresh_secret: env.JWT_REFRESH_SECRET,
+      accessSecret: env.JWT_ACCESS_SECRET,
+      refreshSecret: env.JWT_REFRESH_SECRET,
       accessTokenExp: ACCESS_TOKEN_EXP,
       refreshTokenExp: REFRESH_TOKEN_EXP,
+      accessTokenExpInMs: ms(ACCESS_TOKEN_EXP),
+      refreshTokenExpInMs: ms(REFRESH_TOKEN_EXP),
       issuer: 'bondhupath-backend',
       audience: 'bondhupath-client'
     }
