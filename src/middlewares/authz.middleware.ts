@@ -17,6 +17,21 @@ export const authz = new Elysia({ name: "authz.middlware" })
         return set.status = 403, { error: 'ACCOUNT_SUSPENDED', message: 'Your account has been suspended. Contact support for more information.' };
 
       const { passwordHash, ...user } = userObj[0];
-      return { userObj: user } as const;
+      return {
+        userObj: {
+          id: user.id,
+          buetId: user.buetId,
+          email: user.email,
+          fullName: user.fullName,
+          gender: user.gender,
+          role: user.role,
+          department: user.department,
+          accountStatus: user.accountStatus,
+          consentLog: user.consentLog,
+          pushToken: user.pushToken,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt
+        }
+      };
     }
   })

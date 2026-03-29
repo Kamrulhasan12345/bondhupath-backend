@@ -8,9 +8,11 @@ import { users } from "../users/users.schema";
 import { and, eq } from "drizzle-orm";
 import { sessions } from "./authn.schema";
 import config from "../../config/config";
+import { authz } from "../../middlewares/authz.middleware";
 
 export const authController = new Elysia({ prefix: "/auth" })
   .use(authn)
+  .use(authz)
   .use(refreshJwt)
   .post("/login", async ({ request, body, set, accessJwt, refreshJwt }) => {
     const userObj = await db.select().from(users).where(eq(users.buetId, body.buet_id)).limit(1);
@@ -39,6 +41,7 @@ export const authController = new Elysia({ prefix: "/auth" })
       sub: user.id,
       email: user.email,
       buet_id: user.buetId,
+      full_name: user.fullName,
       role: user.role,
       gender: user.gender,
     });
@@ -175,6 +178,7 @@ export const authController = new Elysia({ prefix: "/auth" })
       sub: user.id,
       email: user.email,
       buet_id: user.buetId,
+      full_name: user.fullName,
       role: user.role,
       gender: user.gender
     })
@@ -219,4 +223,21 @@ export const authController = new Elysia({ prefix: "/auth" })
   }, {
     authn: true,
   })
+  .post("/ws-refresh", async ({ userObj: { id, email, buetId, role, gender, fullName }, wsJwt, request, set }) => {
+    const wsToken = await wsJwt.sign({
+      sub: id,
+      email: email,
+      buet_id: buetId,
+      full_name: fullName,
+      role: role,
+      gender: gender,
+    });
+
+    set.status = 200;
+    return {
+      ws_token: wsToken,
+      expires_in_ms: config.auth.jwt.wsTokenExpInMs,
+      token_type: 'Bearer',
+    }
+  }, { authz: true })
 
